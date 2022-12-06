@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Ziyuan Lin" />
+
+<meta name="date" content="2022-12-06" />
+
+<title>Introduction to StatComp22099</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to StatComp22099</h1>
+<h4 class="author">Ziyuan Lin</h4>
+<h4 class="date">2022-12-06</h4>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(StatComp22099)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rrpack)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(microbenchmark)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span></code></pre></div>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p><strong>StatComp22099</strong> is a simple R package developed for
+the final project of the course Statistical Computing (22 Fall). This
+package contains several R and cpp functions to fit sparse reduced-rank
+regression (SRRR) model, namely, the R functions <em>SRRR</em>,
+<em>sample.generator</em> and <em>SRRR.sim</em> together with cpp
+functions <em>SRRR_cpp</em> and <em>subgradient_cpp</em>.</p>
+<p>In this file, we introduce those functions and provide some examples
+for usage.</p>
+</div>
+<div id="fitting-srrr-model" class="section level2">
+<h2>Fitting SRRR Model</h2>
+<p>The article (Chen and Huang (2012)) provides two methods, subgradient
+method and variational method, to fit the SRRR model. In this package,
+we only develop subgradient method since it is more efficient under high
+dimensional setting <span class="math inline">\(p&gt;n\)</span>.</p>
+<p>The sparse reduced-rank regression model can be formulated as the
+optimization problem below <span class="math display">\[
+\min_{\mathbf{A},\mathbf{B}}\|\mathbf{Y}-\mathbf{X}\mathbf{B}\mathbf{A}^T\|^2+\sum_{i=1}^p\lambda_i\|\mathbf{B}^i\|^2,\quad\text{s.t.
+}\mathbf{A}^T\mathbf{A}=\mathbf{I},
+\]</span> where the superscript denotes a row of the matrix so that
+<span class="math inline">\(\mathbf{B}^i\)</span> is a row vector, the
+constraint is introduced for identifiability purposes, and <span class="math inline">\(\lambda_i&gt;0\)</span> are penalty parameters.
+Now we may solve this optimization problem by block relaxation
+method:</p>
+<ul>
+<li><p>For fixed <span class="math inline">\(\mathbf{B}\)</span>, The
+solution of <span class="math inline">\(\mathbf{A}\)</span> is <span class="math inline">\(\hat{\mathbf{A}}=\mathbf{U}\mathbf{V}^T\)</span>,
+where <span class="math inline">\(\mathbf{U}\)</span> and <span class="math inline">\(\mathbf{V}\)</span> are obtained from SVD <span class="math inline">\(\mathbf{Y}^T\mathbf{X}\mathbf{B}=\mathbf{U}\mathbf{D}\mathbf{V}^T\)</span>.</p></li>
+<li><p>For fixed <span class="math inline">\(\mathbf{A}\)</span>, using
+subgradient method, the solution of <span class="math inline">\(\mathbf{B}\)</span> is <span class="math display">\[
+\mathbf{B}^l=\frac{1}{\|\mathbf{X}_l\|^2}\left(1-\frac{\lambda_l}{2\|\mathbf{X}_l^T\mathbf{R}_l\|}\right)_+\mathbf{X}_l^T\mathbf{R}_l.
+\]</span></p></li>
+</ul>
+<p>The source R code of <em>SRRR</em>, <em>sample.generator</em> and
+<em>SRRR.sim</em> is as follows:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>SRRR <span class="ot">&lt;-</span> <span class="cf">function</span>(Y, X, <span class="at">lambda=</span><span class="fl">0.5</span>, r, <span class="at">method=</span><span class="st">&quot;sub&quot;</span>, weight){</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  q <span class="ot">&lt;-</span> <span class="fu">ncol</span>(Y)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  Sxx <span class="ot">&lt;-</span> <span class="fu">t</span>(X)<span class="sc">%*%</span>X<span class="sc">/</span>n</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  Sxy <span class="ot">&lt;-</span> <span class="fu">t</span>(X)<span class="sc">%*%</span>Y<span class="sc">/</span>n</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  Syx <span class="ot">&lt;-</span> <span class="fu">t</span>(Y)<span class="sc">%*%</span>X<span class="sc">/</span>n</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  V <span class="ot">&lt;-</span> <span class="fu">eigen</span>(Syx<span class="sc">%*%</span><span class="fu">solve</span>(Sxx)<span class="sc">%*%</span>Sxy,<span class="at">symmetric =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>vector[,<span class="dv">1</span><span class="sc">:</span>r]</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> V</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  B <span class="ot">&lt;-</span> <span class="fu">solve</span>(Sxx)<span class="sc">%*%</span>Sxy<span class="sc">%*%</span>V</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">SRRR_cpp</span>(Y, X, method, B, A, r, lambda, <span class="at">conv=</span><span class="fl">1e-4</span>, <span class="at">miter=</span><span class="fl">1e4</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">inner_conv=</span><span class="fl">1e-3</span>, <span class="at">inner_iter=</span><span class="fl">5e3</span>, <span class="at">WA=</span>weight)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  conv_flag <span class="ot">&lt;-</span> fit<span class="sc">$</span>conv_flag</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span>conv_flag){</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;Warning: not converge&quot;</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">B=</span>fit<span class="sc">$</span>A, <span class="at">A=</span>fit<span class="sc">$</span>V, <span class="at">C=</span>fit<span class="sc">$</span>C, <span class="at">iter=</span>fit<span class="sc">$</span>iter))</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>sample.generator <span class="ot">&lt;-</span> <span class="cf">function</span>(n, p, p0, q, r, rho.x, rho.e){</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> n, <span class="at">ncol =</span> p)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  Y <span class="ot">&lt;-</span> E <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> n, <span class="at">ncol =</span> q)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  B <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fu">rnorm</span>(p0<span class="sc">*</span>r),<span class="fu">rep</span>(<span class="dv">0</span>,(p<span class="sc">-</span>p0)<span class="sc">*</span>r)), <span class="at">nrow =</span> p, <span class="at">ncol =</span> r, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(q<span class="sc">*</span>r), <span class="at">nrow =</span> q, <span class="at">ncol =</span> r)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  C <span class="ot">&lt;-</span> B<span class="sc">%*%</span><span class="fu">t</span>(A)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  sigma.x <span class="ot">&lt;-</span> <span class="fu">matrix</span>(rho.x, <span class="at">nrow =</span> p, <span class="at">ncol =</span> p)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  sigma.x <span class="ot">&lt;-</span> sigma.x<span class="sc">+</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">-</span>rho.x, p)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, <span class="at">mu =</span> <span class="fu">rep</span>(<span class="dv">0</span>,p), <span class="at">Sigma =</span> sigma.x)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  sigma.e <span class="ot">&lt;-</span> <span class="fu">matrix</span>(rho.e, <span class="at">nrow =</span> q, <span class="at">ncol =</span> q)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  sigma.e <span class="ot">&lt;-</span> sigma.e<span class="sc">+</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">-</span>rho.e, q)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  sgm2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">diag</span>(<span class="fu">t</span>(C)<span class="sc">%*%</span>sigma.x<span class="sc">%*%</span>C))<span class="sc">/</span>q</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  E <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, <span class="at">mu =</span> <span class="fu">rep</span>(<span class="dv">0</span>,q), <span class="at">Sigma =</span> sgm2<span class="sc">*</span>sigma.e)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  Y <span class="ot">&lt;-</span> X<span class="sc">%*%</span>C<span class="sc">+</span>E</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">X=</span>X,<span class="at">Y=</span>Y,<span class="at">E=</span>E,<span class="at">C=</span>C,<span class="at">B=</span>B,<span class="at">A=</span>A))</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>SRRR.sim <span class="ot">&lt;-</span> <span class="cf">function</span>(n, p, q, p0, r, rho.x, rho.e, <span class="at">runs=</span><span class="dv">30</span>){</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  mse1 <span class="ot">&lt;-</span> mse2 <span class="ot">&lt;-</span> time1 <span class="ot">&lt;-</span> time2 <span class="ot">&lt;-</span> <span class="fu">numeric</span>(runs)</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>runs){</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    Sample <span class="ot">&lt;-</span> <span class="fu">sample.generator</span>(n,p,p0,q,r,rho.x,rho.e)</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    X <span class="ot">&lt;-</span> Sample<span class="sc">$</span>X</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    Y <span class="ot">&lt;-</span> Sample<span class="sc">$</span>Y</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    C <span class="ot">&lt;-</span> Sample<span class="sc">$</span>C</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    res1 <span class="ot">&lt;-</span> <span class="fu">srrr</span>(Y, X, <span class="at">nrank =</span> r, <span class="at">method =</span> <span class="st">&quot;adglasso&quot;</span>)</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    C1 <span class="ot">&lt;-</span> res1<span class="sc">$</span>U <span class="sc">%*%</span> res1<span class="sc">$</span>D <span class="sc">%*%</span> <span class="fu">t</span>(res1<span class="sc">$</span>V)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    res2 <span class="ot">&lt;-</span> <span class="fu">SRRR</span>(Y, X, <span class="at">r=</span>r, <span class="at">weight =</span> <span class="fu">rep</span>(<span class="dv">1</span>, p))</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    C2 <span class="ot">&lt;-</span> res2<span class="sc">$</span>C</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    mse1[i] <span class="ot">&lt;-</span> <span class="fu">norm</span>(C<span class="sc">-</span>C1,<span class="at">type =</span> <span class="st">&quot;F&quot;</span>)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>(n<span class="sc">*</span>q)</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    mse2[i] <span class="ot">&lt;-</span> <span class="fu">norm</span>(C<span class="sc">-</span>C2,<span class="at">type =</span> <span class="st">&quot;F&quot;</span>)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>(n<span class="sc">*</span>q)</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    time1[i] <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="fu">microbenchmark</span>(<span class="fu">srrr</span>(Y, X, <span class="at">nrank =</span> r, <span class="at">method =</span> <span class="st">&quot;adglasso&quot;</span>)))<span class="sc">$</span>mean</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    time2[i] <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="fu">microbenchmark</span>(<span class="fu">SRRR</span>(Y, X, <span class="at">r=</span>r, <span class="at">weight =</span> <span class="fu">rep</span>(<span class="dv">1</span>, p))))<span class="sc">$</span>mean</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  MSE1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(mse1)</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>  SE1 <span class="ot">&lt;-</span> <span class="fu">sd</span>(mse1)</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  MSE2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(mse2)</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  SE2 <span class="ot">&lt;-</span> <span class="fu">sd</span>(mse2)</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  Time1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(time1)</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  Time2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(time2)</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">MSE1=</span>MSE1, <span class="at">SE1=</span>SE1, <span class="at">MSE2=</span>MSE2, <span class="at">SE2=</span>SE2, <span class="at">Time1=</span>Time1, <span class="at">Time2=</span>Time2))</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>In the function <em>SRRR</em>, we apply an Rcpp function
+<em>SRRR_cpp</em>, which implement subgradient method. The source cpp
+code is as follows:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Rcpp<span class="sc">::</span>List <span class="fu">SRRR_cpp</span>(arma<span class="sc">::</span>mat Y, arma<span class="sc">::</span>mat X, String method, arma<span class="sc">::</span>mat A0, arma<span class="sc">::</span>mat V0,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                    int r, double lambda,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                    double conv, int miter,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                    double inner_conv, double inner_iter,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                    arma<span class="sc">::</span>vec WA){</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  int p<span class="ot">=</span>X.n_cols;</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="sc">/</span><span class="er">/</span>int n<span class="ot">=</span>X.n_rows, q<span class="ot">=</span>Y.n_cols</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  arma<span class="sc">::</span>mat YtX<span class="ot">=</span><span class="fu">Y.t</span>()<span class="sc">*</span>X;</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  double Xrk<span class="ot">=</span><span class="fu">accu</span>(<span class="fu">svd</span>(X)<span class="sc">&gt;</span><span class="fl">0.01</span>);</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  int iter<span class="ot">=</span><span class="dv">0</span>;</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  double dfu0,dfv0;</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  bool conv_flag;</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  double C1f, sqe, df;</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  arma<span class="sc">::</span>vec s;</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  arma<span class="sc">::</span>vec <span class="fu">diff</span>(miter<span class="sc">+</span><span class="dv">1</span>);</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">diff.fill</span>(conv<span class="sc">+</span><span class="dv">1</span>);</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  arma<span class="sc">::</span>mat V1, A1, C0, C1, W, u, v, residual;</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  Rcpp<span class="sc">::</span>List inner_out;</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  Rcpp<span class="sc">::</span>List out;</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  V1 <span class="ot">=</span> V0;</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  A1 <span class="ot">=</span> A0;</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  C1 <span class="ot">=</span> A0<span class="sc">*</span><span class="fu">V0.t</span>();</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span>((iter<span class="sc">&lt;</span>miter)<span class="sc">&amp;</span>(<span class="fu">diff</span>(iter)<span class="sc">&gt;</span>conv)){</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    V0 <span class="ot">=</span> V1;</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    A0 <span class="ot">=</span> A1;</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    C0 <span class="ot">=</span> C1;</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    arma<span class="sc">::</span>mat YV0 <span class="ot">=</span> Y<span class="sc">*</span>V0;</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(method<span class="sc">==</span><span class="st">&quot;sub&quot;</span>){</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>      inner_out <span class="ot">=</span> <span class="fu">subgradient_cpp</span>(YV0, X, lambda<span class="sc">*</span>WA, A0, inner_conv, inner_iter);</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    arma<span class="sc">::</span>mat inner_outB <span class="ot">=</span> inner_out[<span class="st">&quot;B&quot;</span>];</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    A1 <span class="ot">=</span> inner_outB;</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    W <span class="ot">=</span> YtX<span class="sc">*</span>A1;</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">svd</span>(u, s, v, W);</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    u <span class="ot">=</span> <span class="fu">u.cols</span>(<span class="dv">0</span>,r<span class="dv">-1</span>);</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    V1 <span class="ot">=</span> u <span class="sc">*</span> <span class="fu">v.t</span>();</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    C1 <span class="ot">=</span> A1<span class="sc">*</span><span class="fu">V1.t</span>();</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    C1f <span class="ot">=</span> <span class="fu">accu</span>(<span class="fu">square</span>(C1));</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (C1f <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>      <span class="fu">diff</span>(iter) <span class="ot">=</span> <span class="dv">0</span>;</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>      iter <span class="ot">=</span> iter <span class="sc">+</span> <span class="dv">1</span>;</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>      <span class="fu">diff</span>(iter) <span class="ot">=</span> <span class="fu">pow</span>(<span class="fu">accu</span>(<span class="fu">square</span>(C0 <span class="sc">-</span> C1))<span class="sc">/</span>C1f,<span class="fl">0.5</span>);</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>  diff <span class="ot">=</span> <span class="fu">diff.subvec</span>(<span class="dv">0</span>, iter);</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>  residual <span class="ot">=</span> Y <span class="sc">-</span> X <span class="sc">*</span> C1;</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>  sqe <span class="ot">=</span> <span class="fu">accu</span>(<span class="fu">square</span>(residual));</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>  dfu0 <span class="ot">=</span> <span class="fu">accu</span>(A1 <span class="sc">!=</span> <span class="dv">0</span>);</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>  dfv0 <span class="ot">=</span> <span class="fu">accu</span>(V1 <span class="sc">!=</span> <span class="dv">0</span>);</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">=</span> dfu0 <span class="sc">*</span> Xrk<span class="sc">/</span>p <span class="sc">+</span> dfv0 <span class="sc">-</span> r<span class="sc">*</span>r;</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">diff</span>(iter) <span class="sc">&lt;=</span> conv) {</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    conv_flag <span class="ot">=</span> true;</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>    conv_flag <span class="ot">=</span> false;</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>  out[<span class="st">&quot;diff&quot;</span>] <span class="ot">=</span> diff;</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>  out[<span class="st">&quot;iter&quot;</span>] <span class="ot">=</span> iter;</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>  out[<span class="st">&quot;sqe&quot;</span>]  <span class="ot">=</span> sqe;</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>  out[<span class="st">&quot;df&quot;</span>]   <span class="ot">=</span> df;</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>  out[<span class="st">&quot;conv_flag&quot;</span>] <span class="ot">=</span> conv_flag;</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>  out[<span class="st">&quot;A&quot;</span>]  <span class="ot">=</span> A1;</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>  out[<span class="st">&quot;V&quot;</span>]  <span class="ot">=</span> V1;</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>  out[<span class="st">&quot;C&quot;</span>]  <span class="ot">=</span> C1;</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out);</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>Rcpp<span class="sc">::</span>List <span class="fu">subgradient_cpp</span>(arma<span class="sc">::</span>mat Y, arma<span class="sc">::</span>mat X, arma<span class="sc">::</span>vec lam, arma<span class="sc">::</span>mat B0, double conv, int miter){</span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>  int p<span class="ot">=</span>X.n_cols, iter<span class="ot">=</span><span class="dv">0</span>, j;</span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>  double diff<span class="ot">=</span>conv<span class="sc">+</span><span class="dv">1</span>, B1f, sqe;</span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>  arma<span class="sc">::</span>mat B1, R, Rj, XRj;</span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>  arma<span class="sc">::</span>rowvec sh <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">square</span>(X), <span class="dv">0</span>);;</span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>  Rcpp<span class="sc">::</span>List out;</span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>  B1 <span class="ot">=</span> B0;</span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>  R <span class="ot">=</span> Y<span class="sc">-</span>X<span class="sc">*</span>B1;</span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span>((diff<span class="sc">&gt;</span>conv)<span class="sc">&amp;</span>(iter<span class="sc">&lt;</span>miter)){</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>    B0 <span class="ot">=</span> B1;</span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(<span class="at">j=</span><span class="dv">0</span>;j<span class="sc">&lt;</span>p;j<span class="sc">++</span>){</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>      Rj <span class="ot">=</span> R<span class="sc">+</span><span class="fu">X.col</span>(j)<span class="sc">*</span><span class="fu">B1.row</span>(j);<span class="sc">/</span><span class="er">/</span>nxq</span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>      XRj <span class="ot">=</span> <span class="fu">trans</span>(<span class="fu">X.col</span>(j))<span class="sc">*</span>Rj; <span class="sc">/</span><span class="er">/</span>1xq</span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>      arma<span class="sc">::</span>rowvec t1<span class="ot">=</span>XRj<span class="sc">/</span><span class="fu">as_scalar</span>(<span class="fu">sh</span>(j))<span class="sc">*</span><span class="fu">max</span>(<span class="fl">0.0</span>,<span class="dv">1</span><span class="sc">-</span><span class="fu">lam</span>(j)<span class="sc">/</span><span class="fu">pow</span>(<span class="fu">accu</span>(<span class="fu">square</span>(XRj)),<span class="fl">0.5</span>));</span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>      <span class="fu">B1.row</span>(j) <span class="ot">=</span> t1;</span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>      R <span class="ot">=</span> Rj <span class="sc">-</span> <span class="fu">X.col</span>(j)<span class="sc">*</span><span class="fu">B1.row</span>(j);</span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>    B1f <span class="ot">=</span> <span class="fu">accu</span>(<span class="fu">square</span>(B1));</span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(B1f<span class="sc">==</span><span class="dv">0</span>){</span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>      iter <span class="ot">=</span> miter;</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>      diff <span class="ot">=</span> <span class="fu">pow</span>(<span class="fu">accu</span>(<span class="fu">square</span>(B0 <span class="sc">-</span> B1))<span class="sc">/</span>B1f,<span class="fl">0.5</span>);</span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>      iter <span class="ot">=</span> iter <span class="sc">+</span> <span class="dv">1</span>;</span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>  sqe <span class="ot">=</span> <span class="fu">accu</span>(<span class="fu">square</span>(Y<span class="sc">-</span>X<span class="sc">*</span>B0));</span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>  out[<span class="st">&quot;B&quot;</span>] <span class="ot">=</span> B1;</span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>  out[<span class="st">&quot;sqe&quot;</span>] <span class="ot">=</span> sqe;</span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>  out[<span class="st">&quot;iter&quot;</span>] <span class="ot">=</span> iter;</span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out);</span>
+<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="exanples" class="section level2">
+<h2>Exanples</h2>
+<p>We provide two simple examples using the simulation function
+<em>SRRR.sim</em>. We report the result of our function <em>SRRR</em>
+and the function <em>srrr</em> from the package <code>rrpack</code>.
+Here “MSE1”, “SE1” and “Time1” correspond to <em>srrr</em> and “MSE2”,
+“SE2” and “Time2” correspond to <em>SRRR</em>. See more details in the
+help documents of the functions.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">50</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">=</span> <span class="dv">10</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">=</span> <span class="dv">5</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>q <span class="ot">=</span> <span class="dv">10</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>r <span class="ot">=</span> <span class="dv">3</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>rho.x <span class="ot">=</span> rho.e <span class="ot">=</span> <span class="fl">0.1</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">22099</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">SRRR.sim</span>(n, p, q, p0, r, rho.x, rho.e)</span></code></pre></div>
+<pre><code>## $MSE1
+## [1] 0.02538367
+## 
+## $SE1
+## [1] 0.0153905
+## 
+## $MSE2
+## [1] 0.03987406
+## 
+## $SE2
+## [1] 0.02176625
+## 
+## $Time1
+## [1] 17.24316
+## 
+## $Time2
+## [1] 213.1727</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">50</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">=</span> <span class="dv">30</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">=</span> <span class="dv">5</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>q <span class="ot">=</span> <span class="dv">30</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>r <span class="ot">=</span> <span class="dv">3</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>rho.x <span class="ot">=</span> rho.e <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">22099</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">SRRR.sim</span>(n, p, q, p0, r, rho.x, rho.e)</span></code></pre></div>
+<pre><code>## $MSE1
+## [1] 0.02160743
+## 
+## $SE1
+## [1] 0.01098213
+## 
+## $MSE2
+## [1] 0.07801897
+## 
+## $SE2
+## [1] 0.0378221
+## 
+## $Time1
+## [1] 50.2401
+## 
+## $Time2
+## [1] 301.8041</code></pre>
+<p>From the results above, we can see that the subgradient algorithm is
+robust when the dimension <span class="math inline">\(p\)</span> is
+large (do not set <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> too large, or the algorithm would not
+converge!). Moreover, the performance of <em>srrr</em> is better than
+<em>SRRR</em>.</p>
+</div>
+<div id="reference" class="section level2">
+<h2>Reference</h2>
+<p>Lisha Chen &amp; Jianhua Z. Huang (2012) Sparse Reduced-Rank
+Regression for Simultaneous Dimension Reduction and Variable Selection,
+Journal of the American Statistical Association, 107:500, 1533-1545,
+DOI: 10.1080/01621459.2012.734178</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

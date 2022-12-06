@@ -1,0 +1,16 @@
+Package: StatComp22099
+Type: Package
+Title: Final Project of Statistical Computing 22F
+Version: 0.1.0
+Author: Ziyuan Lin
+Maintainer: Ziyuan Lin <linziyuan@mail.ustc.edu.cn>
+Description: All my homework and several R and Rcpp functions are included.
+License: GPL (>= 2)
+Encoding: UTF-8
+Imports: Rcpp, RcppArmadillo, rrpack, microbenchmark, MASS, stats
+Suggests: knitr, rmarkdown
+LinkingTo: Rcpp, RcppArmadillo
+RoxygenNote: 7.2.2
+VignetteBuilder: knitr
+URL: http://github.com/Ziyuan-Lin/StatComp22099
+BugReports: http://github.com/Ziyuan-Lin/StatComp22099/issues
