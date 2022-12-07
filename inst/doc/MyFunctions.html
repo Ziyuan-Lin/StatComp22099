@@ -12,7 +12,7 @@
 
 <meta name="author" content="Ziyuan Lin" />
 
-<meta name="date" content="2022-12-06" />
+<meta name="date" content="2022-12-07" />
 
 <title>Introduction to StatComp22099</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Introduction to StatComp22099</h1>
 <h4 class="author">Ziyuan Lin</h4>
-<h4 class="date">2022-12-06</h4>
+<h4 class="date">2022-12-07</h4>
 
 
 
@@ -364,7 +364,8 @@ for usage.</p>
 <p>The article (Chen and Huang (2012)) provides two methods, subgradient
 method and variational method, to fit the SRRR model. In this package,
 we only develop subgradient method since it is more efficient under high
-dimensional setting <span class="math inline">\(p&gt;n\)</span>.</p>
+dimensional setting, namely, when <span class="math inline">\(p\)</span>
+is large.</p>
 <p>The sparse reduced-rank regression model can be formulated as the
 optimization problem below <span class="math display">\[
 \min_{\mathbf{A},\mathbf{B}}\|\mathbf{Y}-\mathbf{X}\mathbf{B}\mathbf{A}^T\|^2+\sum_{i=1}^p\lambda_i\|\mathbf{B}^i\|^2,\quad\text{s.t.
@@ -566,8 +567,8 @@ code is as follows:</p>
 <span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out);</span>
 <span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
-<div id="exanples" class="section level2">
-<h2>Exanples</h2>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
 <p>We provide two simple examples using the simulation function
 <em>SRRR.sim</em>. We report the result of our function <em>SRRR</em>
 and the function <em>srrr</em> from the package <code>rrpack</code>.
@@ -596,10 +597,10 @@ help documents of the functions.</p>
 ## [1] 0.02176625
 ## 
 ## $Time1
-## [1] 17.24316
+## [1] 27.20887
 ## 
 ## $Time2
-## [1] 213.1727</code></pre>
+## [1] 379.7721</code></pre>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">50</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">=</span> <span class="dv">30</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">=</span> <span class="dv">5</span></span>
@@ -622,15 +623,27 @@ help documents of the functions.</p>
 ## [1] 0.0378221
 ## 
 ## $Time1
-## [1] 50.2401
+## [1] 134.5627
 ## 
 ## $Time2
-## [1] 301.8041</code></pre>
+## [1] 82.46075</code></pre>
 <p>From the results above, we can see that the subgradient algorithm is
 robust when the dimension <span class="math inline">\(p\)</span> is
 large (do not set <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> too large, or the algorithm would not
-converge!). Moreover, the performance of <em>srrr</em> is better than
-<em>SRRR</em>.</p>
+converge!).</p>
+<p>Moreover, we see that the performance of <em>srrr</em> is better than
+<em>SRRR</em>. After checking the source code of the package
+<code>rrpack</code>, we suggest improving the choice of the initial
+value of matrix <span class="math inline">\(\mathbf{A}\)</span> and
+<span class="math inline">\(\mathbf{B}\)</span>. The function
+<em>srrr</em> choose initial value by another function <em>rrr.fit</em>,
+in this function the general inverse of matrix <span class="math inline">\(S_{xx}\)</span> is computed, while we use function
+<em>solve</em> to compute the inverse of <span class="math inline">\(S_{xx}\)</span>. Linear correlation between the
+columns of matrix <span class="math inline">\(\mathbf{X}\)</span> may
+not be ignorable when the parameters <span class="math inline">\(\rho_x\)</span> and <span class="math inline">\(\rho_e\)</span> are positive, and the function
+<em>solve</em> may be time consuming and biased in this case. Therefore,
+users may try replacing <em>solve</em> by <em>ginv</em> in function
+<em>SRRR</em> and run <em>SRRR.sim</em> to obtain better results.</p>
 </div>
 <div id="reference" class="section level2">
 <h2>Reference</h2>

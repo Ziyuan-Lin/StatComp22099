@@ -24,7 +24,7 @@ In this file, we introduce those functions and provide some examples for usage.
 
 ## Fitting SRRR Model
 
-The article (Chen and Huang (2012)) provides two methods, subgradient method and variational method, to fit the SRRR model. In this package, we only develop subgradient method since it is more efficient under high dimensional setting $p>n$.
+The article (Chen and Huang (2012)) provides two methods, subgradient method and variational method, to fit the SRRR model. In this package, we only develop subgradient method since it is more efficient under high dimensional setting, namely, when $p$ is large.
 
 The sparse reduced-rank regression model can be formulated as the optimization problem below
 $$
@@ -227,7 +227,7 @@ Rcpp::List subgradient_cpp(arma::mat Y, arma::mat X, arma::vec lam, arma::mat B0
 ```
 
 
-## Exanples
+## Examples
 
 We provide two simple examples using the simulation function _SRRR.sim_. We report the result of our function _SRRR_ and the function _srrr_ from the package `rrpack`. Here "MSE1", "SE1" and "Time1" correspond to _srrr_ and "MSE2", "SE2" and "Time2" correspond to _SRRR_. See more details in the help documents of the functions.
 
@@ -256,7 +256,9 @@ set.seed(22099)
 SRRR.sim(n, p, q, p0, r, rho.x, rho.e)
 ```
 
-From the results above, we can see that the subgradient algorithm is robust when the dimension $p$ is large (do not set $p$ and $q$ too large, or the algorithm would not converge!). Moreover, the performance of _srrr_ is better than _SRRR_.
+From the results above, we can see that the subgradient algorithm is robust when the dimension $p$ is large (do not set $p$ and $q$ too large, or the algorithm would not converge!). 
+
+Moreover, we see that the performance of _srrr_ is better than _SRRR_. After checking the source code of the package `rrpack`, we suggest improving the choice of the initial value of matrix $\mathbf{A}$ and $\mathbf{B}$. The function _srrr_ choose initial value by another function _rrr.fit_, in this function the general inverse of matrix $S_{xx}$ is computed, while we use function _solve_ to compute the inverse of $S_{xx}$. Linear correlation between the columns of matrix $\mathbf{X}$ may not be ignorable  when the parameters $\rho_x$ and $\rho_e$ are positive, and the function _solve_ may be time consuming and biased in this case. Therefore, users may try replacing _solve_ by _ginv_ in function _SRRR_ and run _SRRR.sim_ to obtain better results.
 
 ## Reference
 
